@@ -1,8 +1,5 @@
 
 
-
-
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -23,42 +20,42 @@ h1{font-size:22px;margin:8px 0;}
 .btn.blue{background:var(--blue);color:#fff;}
 .row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:6px 0;}
 .muted{color:var(--muted);font-size:13px;}
-
+ 
 .tap-area{position:relative;display:flex;align-items:center;justify-content:center;height:300px;background:radial-gradient(circle at center,#1f6feb22 0%,transparent 70%);border-radius:20px;margin:12px 0;}
-
+ 
 .tap-btn{
-    position: relative;
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    border: 8px solid var(--accent2);
-    background: #0d1117;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 0 40px rgba(240, 185, 11, 0.4);
-    transition: transform .08s, box-shadow .3s, border-color .3s;
+    position: relative;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 8px solid var(--accent2);
+    background: #0d1117;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 40px rgba(240, 185, 11, 0.4);
+    transition: transform .08s, box-shadow .3s, border-color .3s;
 }
 .tap-btn:active{transform:scale(.93);}
 .tap-btn.completed{
-    border-color: var(--accent);
-    box-shadow: 0 0 50px rgba(46, 160, 67, 0.8);
-    cursor: default;
+    border-color: var(--accent);
+    box-shadow: 0 0 50px rgba(46, 160, 67, 0.8);
+    cursor: default;
 }
 .tower-img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    clip-path: inset(100% 0 0 0);
-    transition: clip-path 0.45s ease-out;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 0.45s ease-out;
 }
 .tower-stages{display:flex;justify-content:center;gap:4px;margin-top:6px;}
 .tower-stage{width:20px;height:6px;background:#21262d;border-radius:3px;transition:background .3s;}
 .tower-stage.on{background:var(--accent2);box-shadow:0 0 6px var(--accent2);}
 .tower-stage.done{background:var(--accent);box-shadow:0 0 6px var(--accent);}
-
+ 
 .float{position:absolute;color:var(--accent2);font-weight:700;pointer-events:none;animation:fly .9s ease-out forwards;font-size:22px;z-index:10;}
 @keyframes fly{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-80px);}}
 .city-bar{display:flex;align-items:center;gap:8px;margin:6px 0;}
@@ -101,410 +98,413 @@ h1{font-size:22px;margin:8px 0;}
 </head>
 <body>
 <div class="wrap">
-  <div id="city-screen" class="hidden">
-    <h1>🏰 БӀОВ</h1>
-    <p class="muted">Выбери свой район. Один раз и навсегда.</p>
-    <div id="city-list" class="grid-cities"></div>
-  </div>
-
-  <div id="main-screen" class="hidden">
-    <div class="row">
-      <div><b id="user-name"></b><div class="muted" id="user-city"></div></div>
-      <div style="text-align:right">
-        <div class="muted">Район</div>
-        <b id="city-total" style="color:var(--accent2);font-size:18px;">0</b>
-      </div>
-    </div>
-
-    <div class="card" id="tower-card">
-      <div class="row">
-        <span class="muted">🏰 Прогресс башни</span>
-        <b id="tower-pct" class="muted">0%</b>
-      </div>
-      <div class="tower-progress"><div id="tower-bar" style="width:0%"></div></div>
-      <div class="muted" style="font-size:11px;" id="tower-info">Цель: 1 000 000 000</div>
-      <div class="tower-stages" id="tower-stages"></div>
-    </div>
-
-    <div class="tap-area" id="tap-area">
-        <div class="tap-btn" id="tap-btn">
-            <img src="ССЫЛКА_НА_ВАШУ_КАРТИНКУ"
-                 onerror="this.src='https://via.placeholder.com/220/161b22/f0b90b?text=TOWER'"
-                 class="tower-img" id="tower-img" alt="Башня">
-        </div>
-    </div>
-
-    <div class="row" style="justify-content:center;">
-      <span class="muted">Множитель: <span class="mult-badge" id="multiplier">×1</span></span>
-    </div>
-    <div class="row">
-      <div class="muted">💎 <b id="stones">0</b></div>
-      <div class="muted">👆 <b id="clicks">0</b></div>
-      <div class="muted">🎯 <b id="click-points">0</b></div>
-    </div>
-
-    <button class="btn gold" id="use-stones" style="margin-top:8px;">💎 Вложить камни в башню</button>
-    <div class="row" style="margin-top:8px;">
-      <button class="btn ghost" id="invite" style="flex:1;">📤 Друзья</button>
-      <button class="btn blue" id="buy-btn" style="flex:1;">🛒 Купить камни</button>
-    </div>
-
-    <div class="card" style="margin-top:12px;">
-      <div class="tabs">
-        <div class="tab active" data-tab="top">🏆 Районы</div>
-        <div class="tab" data-tab="city">👥 Мой район</div>
-        <div class="tab" data-tab="global">🌍 Все игроки</div>
-        <div class="tab" data-tab="ach">🏅 Награды</div>
-        <div class="tab" data-tab="invite">📤 Реферал</div>
-      </div>
-      <div id="tab-top"><div id="top-list"></div></div>
-      <div id="tab-city" class="hidden"><div id="city-players"></div></div>
-      <div id="tab-global" class="hidden"><div id="global-players"></div></div>
-      <div id="tab-ach" class="hidden"><div id="ach-list"></div></div>
-      <div id="tab-invite" class="hidden">
-        <p class="muted">За друга — <b style="color:var(--accent2)">100 камней</b>. Камни = очки району.</p>
-        <div class="card" style="word-break:break-all;font-size:12px;" id="ref-link">—</div>
-        <button class="btn" id="share-btn">📤 Поделиться</button>
-        <div class="row" style="margin-top:10px;"><span class="muted">Приглашено:</span><b id="invited">0</b></div>
-      </div>
-    </div>
-  </div>
+  <div id="city-screen" class="hidden">
+    <h1>🏰 БӀОВ</h1>
+    <p class="muted">Выбери свой район. Один раз и навсегда.</p>
+    <div id="city-list" class="grid-cities"></div>
+  </div>
+ 
+  <div id="main-screen" class="hidden">
+    <div class="row">
+      <div><b id="user-name"></b><div class="muted" id="user-city"></div></div>
+      <div style="text-align:right">
+        <div class="muted">Район</div>
+        <b id="city-total" style="color:var(--accent2);font-size:18px;">0</b>
+      </div>
+    </div>
+ 
+    <div class="card" id="tower-card">
+      <div class="row">
+        <span class="muted">🏰 Прогресс башни</span>
+        <b id="tower-pct" class="muted">0%</b>
+      </div>
+      <div class="tower-progress"><div id="tower-bar" style="width:0%"></div></div>
+      <div class="muted" style="font-size:11px;" id="tower-info">Цель: 1 000 000 000</div>
+      <div class="tower-stages" id="tower-stages"></div>
+    </div>
+ 
+    <div class="tap-area" id="tap-area">
+        <div class="tap-btn" id="tap-btn">
+            <img src="ССЫЛКА_НА_ВАШУ_КАРТИНКУ"
+                 onerror="this.src='https://via.placeholder.com/220/161b22/f0b90b?text=TOWER'"
+                 class="tower-img" id="tower-img" alt="Башня">
+        </div>
+    </div>
+ 
+    <div class="row" style="justify-content:center;">
+      <span class="muted">Множитель: <span class="mult-badge" id="multiplier">×1</span></span>
+    </div>
+    <div class="row">
+      <div class="muted">💎 <b id="stones">0</b></div>
+      <div class="muted">👆 <b id="clicks">0</b></div>
+      <div class="muted">🎯 <b id="click-points">0</b></div>
+    </div>
+ 
+    <button class="btn gold" id="use-stones" style="margin-top:8px;">💎 Вложить камни в башню</button>
+    <div class="row" style="margin-top:8px;">
+      <button class="btn ghost" id="invite" style="flex:1;">📤 Друзья</button>
+      <button class="btn blue" id="buy-btn" style="flex:1;">🛒 Купить камни</button>
+    </div>
+ 
+    <div class="card" style="margin-top:12px;">
+      <div class="tabs">
+        <div class="tab active" data-tab="top">🏆 Районы</div>
+        <div class="tab" data-tab="city">👥 Мой район</div>
+        <div class="tab" data-tab="global">🌍 Все игроки</div>
+        <div class="tab" data-tab="ach">🏅 Награды</div>
+        <div class="tab" data-tab="invite">📤 Реферал</div>
+      </div>
+      <div id="tab-top"><div id="top-list"></div></div>
+      <div id="tab-city" class="hidden"><div id="city-players"></div></div>
+      <div id="tab-global" class="hidden"><div id="global-players"></div></div>
+      <div id="tab-ach" class="hidden"><div id="ach-list"></div></div>
+      <div id="tab-invite" class="hidden">
+        <p class="muted">За друга — <b style="color:var(--accent2)">100 камней</b>. Камни = очки району.</p>
+        <div class="card" style="word-break:break-all;font-size:12px;" id="ref-link">—</div>
+        <button class="btn" id="share-btn">📤 Поделиться</button>
+        <div class="row" style="margin-top:10px;"><span class="muted">Приглашено:</span><b id="invited">0</b></div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 <div id="modal-container"></div>
-
+ 
 <script>
-// === ЗАГЛУШКА ДЛЯ БРАУЗЕРА (работает и в Telegram, и без него) ===
+// === ВАША ССЫЛКА ИЗ VS CODE ===
+const BASE_URL = "https://hxd76j2m-56525.euw.devtunnels.ms"; 
+
 const _tgReal = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
 const tg = _tgReal || {
-    ready: () => {},
-    expand: () => {},
-    setHeaderColor: () => {},
-    setBackgroundColor: () => {},
-    initData: "dev",
-    initDataUnsafe: {},
-    HapticFeedback: { impactOccurred: () => {}, notificationOccurred: () => {} },
-    openTelegramLink: (url) => window.open(url, "_blank")
+    ready: () => {},
+    expand: () => {},
+    setHeaderColor: () => {},
+    setBackgroundColor: () => {},
+    initData: "dev",
+    initDataUnsafe: {},
+    HapticFeedback: { impactOccurred: () => {}, notificationOccurred: () => {} },
+    openTelegramLink: (url) => window.open(url, "_blank")
 };
 try {
-    tg.ready(); tg.expand();
-    tg.setHeaderColor("#0d1117"); tg.setBackgroundColor("#0d1117");
+    tg.ready(); tg.expand();
+    tg.setHeaderColor("#0d1117"); tg.setBackgroundColor("#0d1117");
 } catch(e) { console.warn("TG init:", e); }
-
+ 
 const INIT_DATA = (tg.initData && tg.initData.length > 0) ? tg.initData : "dev";
 const state = { user:null, cities:[], ws:null, currentQ:null, qTimer:null, botUsername:"", towerGoal:1000000000 };
-
+ 
 function $(id){ return document.getElementById(id); }
 function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),1800); }
+
 async function api(path, body){
-  const r = await fetch(path,{method:body?"POST":"GET",headers:{"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
-  if(!r.ok) throw new Error(await r.text());
-  return r.json();
+  const r = await fetch(BASE_URL + path,{method:body?"POST":"GET",headers:{"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+  if(!r.ok) throw new Error(await r.text());
+  return r.json();
 }
-
+ 
 function initTowerStages(){
-  const el = $("tower-stages"); el.innerHTML = "";
-  for (let i = 0; i < 10; i++) {
-    const d = document.createElement("div");
-    d.className = "tower-stage";
-    el.appendChild(d);
-  }
+  const el = $("tower-stages"); el.innerHTML = "";
+  for (let i = 0; i < 10; i++) {
+    const d = document.createElement("div");
+    d.className = "tower-stage";
+    el.appendChild(d);
+  }
 }
-
+ 
 async function init(){
-  initTowerStages();
-  try{
-    const cfg = await api("/api/config");
-    state.botUsername = cfg.bot_username || "";
-    state.towerGoal = cfg.tower_goal || 1000000000;
-    const res = await api("/api/auth", { init_data: INIT_DATA });
-    state.user = res.user; state.cities = res.cities;
-    if(!state.user.city){ showCityChoose(); }
-    else { showMain(); connectWS(); loadLeaderboard(); }
-  }catch(e){
-    console.error("init error:", e);
-    document.body.innerHTML = '<div style="padding:20px;color:#f85149;font-family:monospace;">Открой игру через кнопку бота в Telegram.</div>';
-  }
+  initTowerStages();
+  try{
+    const cfg = await api("/api/config");
+    state.botUsername = cfg.bot_username || "";
+    state.towerGoal = cfg.tower_goal || 1000000000;
+    const res = await api("/api/auth", { init_data: INIT_DATA });
+    state.user = res.user; state.cities = res.cities;
+    if(!state.user.city){ showCityChoose(); }
+    else { showMain(); connectWS(); loadLeaderboard(); }
+  }catch(e){
+    console.error("init error:", e);
+    document.body.innerHTML = '<div style="padding:20px;color:#f85149;font-family:monospace;">Ошибка связи с сервером. Убедитесь, что ссылка в BASE_URL верная и Python-сервер запущен.</div>';
+  }
 }
-
+ 
 function showCityChoose(){
-  $("city-screen").classList.remove("hidden");
-  const el = $("city-list"); el.innerHTML="";
-  state.cities.forEach(name=>{
-    const d = document.createElement("div");
-    d.className="city-choose"; d.textContent=name;
-    d.onclick = ()=>chooseCity(name);
-    el.appendChild(d);
-  });
+  $("city-screen").classList.remove("hidden");
+  const el = $("city-list"); el.innerHTML="";
+  state.cities.forEach(name=>{
+    const d = document.createElement("div");
+    d.className="city-choose"; d.textContent=name;
+    d.onclick = ()=>chooseCity(name);
+    el.appendChild(d);
+  });
 }
 async function chooseCity(city){
-  try{
-    await api("/api/set_city",{init_data:INIT_DATA,city});
-    state.user.city = city;
-    $("city-screen").classList.add("hidden");
-    showMain(); connectWS(); loadLeaderboard();
-  }catch(e){ toast("Не удалось выбрать"); }
+  try{
+    await api("/api/set_city",{init_data:INIT_DATA,city});
+    state.user.city = city;
+    $("city-screen").classList.add("hidden");
+    showMain(); connectWS(); loadLeaderboard();
+  }catch(e){ toast("Не удалось выбрать"); }
 }
 function showMain(){ $("main-screen").classList.remove("hidden"); renderUser(); }
 function renderUser(){
-  $("user-name").textContent = state.user.first_name || "Игрок";
-  $("user-city").textContent = state.user.city || "";
-  $("stones").textContent = state.user.stones;
-  $("clicks").textContent = state.user.clicks.toLocaleString();
-  $("click-points").textContent = (state.user.click_points || 0).toLocaleString();
-  $("invited").textContent = state.user.invited_count;
-  $("multiplier").textContent = "×" + (state.user.multiplier || 1);
-  if(state.botUsername){
-    $("ref-link").textContent = "https://t.me/"+state.botUsername+"?start=ref"+state.user.tg_id;
-  }
-  updateTowerBar(state.user.click_points || 0);
+  $("user-name").textContent = state.user.first_name || "Игрок";
+  $("user-city").textContent = state.user.city || "";
+  $("stones").textContent = state.user.stones;
+  $("clicks").textContent = state.user.clicks.toLocaleString();
+  $("click-points").textContent = (state.user.click_points || 0).toLocaleString();
+  $("invited").textContent = state.user.invited_count;
+  $("multiplier").textContent = "×" + (state.user.multiplier || 1);
+  if(state.botUsername){
+    $("ref-link").textContent = "https://t.me/"+state.botUsername+"?start=ref"+state.user.tg_id;
+  }
+  updateTowerBar(state.user.click_points || 0);
 }
-
+ 
 let clickBatch = 0, clickTimer = null;
 $("tap-btn").addEventListener("click", (e)=>{
-  if(!state.user?.city) return;
-  if($("tap-btn").classList.contains("completed")) return;
-  clickBatch++;
-  spawnFloat(e, "+1");
-  if(!clickTimer) clickTimer = setTimeout(flushClicks, 500);
+  if(!state.user?.city) return;
+  if($("tap-btn").classList.contains("completed")) return;
+  clickBatch++;
+  spawnFloat(e, "+1");
+  if(!clickTimer) clickTimer = setTimeout(flushClicks, 500);
 });
 async function flushClicks(){
-  const count = clickBatch; clickBatch = 0; clickTimer = null;
-  if(count<=0) return;
-  try{
-    const res = await api("/api/click",{init_data:INIT_DATA,count});
-    if(res.ok){
-      state.user.clicks = res.user_clicks;
-      state.user.click_points = res.user_click_points;
-      state.user.multiplier = res.multiplier;
-      $("clicks").textContent = res.user_clicks.toLocaleString();
-      $("click-points").textContent = res.user_click_points.toLocaleString();
-      $("multiplier").textContent = "×" + res.multiplier;
-      $("city-total").textContent = res.city_total.toLocaleString();
-      updateTowerBar(res.city_total);
-      if(res.city_completed) markTowerDone();
-      if(res.new_achievements && res.new_achievements.length){
-        res.new_achievements.forEach(a => showAchievementModal(a));
-      }
-    } else if(res.reason === "tower_completed"){
-      markTowerDone();
-      toast("Башня твоего района уже достроена!");
-    }
-  }catch(e){}
+  const count = clickBatch; clickBatch = 0; clickTimer = null;
+  if(count<=0) return;
+  try{
+    const res = await api("/api/click",{init_data:INIT_DATA,count});
+    if(res.ok){
+      state.user.clicks = res.user_clicks;
+      state.user.click_points = res.user_click_points;
+      state.user.multiplier = res.multiplier;
+      $("clicks").textContent = res.user_clicks.toLocaleString();
+      $("click-points").textContent = res.user_click_points.toLocaleString();
+      $("multiplier").textContent = "×" + res.multiplier;
+      $("city-total").textContent = res.city_total.toLocaleString();
+      updateTowerBar(res.city_total);
+      if(res.city_completed) markTowerDone();
+      if(res.new_achievements && res.new_achievements.length){
+        res.new_achievements.forEach(a => showAchievementModal(a));
+      }
+    } else if(res.reason === "tower_completed"){
+      markTowerDone();
+      toast("Башня твоего района уже достроена!");
+    }
+  }catch(e){}
 }
 function spawnFloat(e,txt){
-  const area = $("tap-area"); const rect = area.getBoundingClientRect();
-  const span = document.createElement("span");
-  span.className="float"; span.textContent=txt;
-  const x = (e.clientX ?? rect.left+rect.width/2) - rect.left;
-  const y = (e.clientY ?? rect.top+rect.height/2) - rect.top;
-  span.style.left = x+"px"; span.style.top = y+"px";
-  area.appendChild(span); setTimeout(()=>span.remove(),900);
-  try { tg.HapticFeedback?.impactOccurred("light"); } catch(e){}
+  const area = $("tap-area"); const rect = area.getBoundingClientRect();
+  const span = document.createElement("span");
+  span.className="float"; span.textContent=txt;
+  const x = (e.clientX ?? rect.left+rect.width/2) - rect.left;
+  const y = (e.clientY ?? rect.top+rect.height/2) - rect.top;
+  span.style.left = x+"px"; span.style.top = y+"px";
+  area.appendChild(span); setTimeout(()=>span.remove(),900);
+  try { tg.HapticFeedback?.impactOccurred("light"); } catch(e){}
 }
-
+ 
 function updateTowerBar(total){
-  const pctRaw = Math.min(100, (total / state.towerGoal) * 100);
-  const realStage = pctRaw >= 100 ? 10 : Math.floor(pctRaw / 10);
-
-  $("tower-bar").style.width = pctRaw + "%";
-  $("tower-pct").textContent = `Этап ${realStage}/10 (${pctRaw.toFixed(1)}%)`;
-  $("tower-info").textContent = total.toLocaleString() + " / " + state.towerGoal.toLocaleString();
-
-  const img = $("tower-img");
-  if (img) {
-    const hideTop = 100 - realStage * 10;
-    img.style.clipPath = `inset(${hideTop}% 0 0 0)`;
-  }
-
-  const dots = document.querySelectorAll(".tower-stage");
-  dots.forEach((d, i) => {
-    d.classList.remove("on", "done");
-    if (i < realStage) d.classList.add(realStage >= 10 ? "done" : "on");
-  });
+  const pctRaw = Math.min(100, (total / state.towerGoal) * 100);
+  const realStage = pctRaw >= 100 ? 10 : Math.floor(pctRaw / 10);
+ 
+  $("tower-bar").style.width = pctRaw + "%";
+  $("tower-pct").textContent = `Этап ${realStage}/10 (${pctRaw.toFixed(1)}%)`;
+  $("tower-info").textContent = total.toLocaleString() + " / " + state.towerGoal.toLocaleString();
+ 
+  const img = $("tower-img");
+  if (img) {
+    const hideTop = 100 - realStage * 10;
+    img.style.clipPath = `inset(${hideTop}% 0 0 0)`;
+  }
+ 
+  const dots = document.querySelectorAll(".tower-stage");
+  dots.forEach((d, i) => {
+    d.classList.remove("on", "done");
+    if (i < realStage) d.classList.add(realStage >= 10 ? "done" : "on");
+  });
 }
-
+ 
 function markTowerDone(){
-  $("tap-btn").classList.add("completed");
-  $("tower-bar").style.background = "linear-gradient(90deg,#f0b90b,#f85149)";
-  $("tower-bar").style.width = "100%";
-  $("tower-pct").textContent = "Этап 10/10 (100%)";
-  const img = $("tower-img");
-  if (img) img.style.clipPath = "inset(0% 0 0 0)";
-  const dots = document.querySelectorAll(".tower-stage");
-  dots.forEach(d => { d.classList.remove("on"); d.classList.add("done"); });
+  $("tap-btn").classList.add("completed");
+  $("tower-bar").style.background = "linear-gradient(90deg,#f0b90b,#f85149)";
+  $("tower-bar").style.width = "100%";
+  $("tower-pct").textContent = "Этап 10/10 (100%)";
+  const img = $("tower-img");
+  if (img) img.style.clipPath = "inset(0% 0 0 0)";
+  const dots = document.querySelectorAll(".tower-stage");
+  dots.forEach(d => { d.classList.remove("on"); d.classList.add("done"); });
 }
-
+ 
 function showAchievementModal(a){
-  const m = document.createElement("div");
-  m.className = "ach-modal";
-  m.innerHTML = `
-    <div class="ach-card">
-      <div class="ach-emoji">🏅</div>
-      <div class="ach-title">${a.title}</div>
-      <div class="ach-desc">${a.desc}</div>
-      <div class="muted" style="margin-bottom:16px;">Достижение за ${a.threshold.toLocaleString()} кликов</div>
-      <button class="btn" id="ach-share">📤 Поделиться</button>
-      <button class="btn ghost" id="ach-close" style="margin-top:8px;">Продолжить</button>
-    </div>`;
-  $("modal-container").appendChild(m);
-  m.querySelector("#ach-close").onclick = () => m.remove();
-  m.querySelector("#ach-share").onclick = () => {
-    const text = `Я получил достижение «${a.title}» в игре БӀОВ 🏰! Строю башню своего района!`;
-    const url = `https://t.me/${state.botUsername}`;
-    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
-  };
+  const m = document.createElement("div");
+  m.className = "ach-modal";
+  m.innerHTML = `
+    <div class="ach-card">
+      <div class="ach-emoji">🏅</div>
+      <div class="ach-title">${a.title}</div>
+      <div class="ach-desc">${a.desc}</div>
+      <div class="muted" style="margin-bottom:16px;">Достижение за ${a.threshold.toLocaleString()} кликов</div>
+      <button class="btn" id="ach-share">📤 Поделиться</button>
+      <button class="btn ghost" id="ach-close" style="margin-top:8px;">Продолжить</button>
+    </div>`;
+  $("modal-container").appendChild(m);
+  m.querySelector("#ach-close").onclick = () => m.remove();
+  m.querySelector("#ach-share").onclick = () => {
+    const text = `Я получил достижение «${a.title}» в игре БӀОВ 🏰! Строю башню своего района!`;
+    const url = `https://t.me/${state.botUsername}`;
+    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
+  };
 }
-
+ 
 $("use-stones").onclick = async ()=>{
-  if(state.user.stones<=0){ toast("Нет камней — позови друзей!"); return; }
-  try{
-    const res = await api("/api/use_stones",{init_data:INIT_DATA,amount:state.user.stones});
-    if(res.ok){
-      state.user.stones = res.stones_left;
-      $("stones").textContent = res.stones_left;
-      $("city-total").textContent = res.city_total.toLocaleString();
-      updateTowerBar(res.city_total);
-      toast("+"+res.points.toLocaleString()+" очков району!");
-      try { tg.HapticFeedback?.notificationOccurred("success"); } catch(e){}
-      loadLeaderboard();
-    }
-  }catch(e){}
+  if(state.user.stones<=0){ toast("Нет камней — позови друзей!"); return; }
+  try{
+    const res = await api("/api/use_stones",{init_data:INIT_DATA,amount:state.user.stones});
+    if(res.ok){
+      state.user.stones = res.stones_left;
+      $("stones").textContent = res.stones_left;
+      $("city-total").textContent = res.city_total.toLocaleString();
+      updateTowerBar(res.city_total);
+      toast("+"+res.points.toLocaleString()+" очков району!");
+      try { tg.HapticFeedback?.notificationOccurred("success"); } catch(e){}
+      loadLeaderboard();
+    }
+  }catch(e){}
 };
 $("invite").onclick = ()=> document.querySelector('[data-tab="invite"]').click();
 $("buy-btn").onclick = ()=>{
-  tg.openTelegramLink(`https://t.me/${state.botUsername}?start=buy`);
+  tg.openTelegramLink(`https://t.me/${state.botUsername}?start=buy`);
 };
 $("share-btn").onclick = ()=>{
-  const url = $("ref-link").textContent;
-  const share = "https://t.me/share/url?url="+encodeURIComponent(url)+"&text="+encodeURIComponent("Строим башню нашего района! Заходи в БӀОВ 🏰");
-  tg.openTelegramLink(share);
+  const url = $("ref-link").textContent;
+  const share = "https://t.me/share/url?url="+encodeURIComponent(url)+"&text="+encodeURIComponent("Строим башню нашего района! Заходи в БӀОВ 🏰");
+  tg.openTelegramLink(share);
 };
 document.querySelectorAll(".tab").forEach(t=>{
-  t.onclick = ()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    ["top","city","global","ach","invite"].forEach(k=>{
-      $("tab-"+k).classList.toggle("hidden", t.dataset.tab !== k);
-    });
-    if(t.dataset.tab==="city") loadCityPlayers();
-    if(t.dataset.tab==="global") loadGlobalTop();
-    if(t.dataset.tab==="ach") loadAchievements();
-  };
+  t.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    ["top","city","global","ach","invite"].forEach(k=>{
+      $("tab-"+k).classList.toggle("hidden", t.dataset.tab !== k);
+    });
+    if(t.dataset.tab==="city") loadCityPlayers();
+    if(t.dataset.tab==="global") loadGlobalTop();
+    if(t.dataset.tab==="ach") loadAchievements();
+  };
 });
-
+ 
 async function loadLeaderboard(){
-  try{
-    const data = await api("/api/leaderboard");
-    state.towerGoal = data.tower_goal;
-    const cities = data.cities;
-    const max = cities[0]?.total || 1;
-    const el = $("top-list"); el.innerHTML="";
-    cities.forEach((c,i)=>{
-      const mine = c.name === state.user.city;
-      const d = document.createElement("div");
-      d.className = "city-bar"+(mine?" mine":"")+(c.completed?" completed":"");
-      const flag = c.completed ? "✅ #"+c.rank : "";
-      d.innerHTML = `<div class="name">${i+1}. ${c.name} ${flag}</div>
-        <div class="bar"><div style="width:${(c.total/max*100)}%"></div></div>
-        <div class="muted" style="min-width:55px;text-align:right;font-size:11px;">${c.total.toLocaleString()}</div>`;
-      el.appendChild(d);
-      if(mine){
-        $("city-total").textContent = c.total.toLocaleString();
-        updateTowerBar(c.total);
-        if(c.completed) markTowerDone();
-      }
-    });
-  }catch(e){}
+  try{
+    const data = await api("/api/leaderboard");
+    state.towerGoal = data.tower_goal;
+    const cities = data.cities;
+    const max = cities[0]?.total || 1;
+    const el = $("top-list"); el.innerHTML="";
+    cities.forEach((c,i)=>{
+      const mine = c.name === state.user.city;
+      const d = document.createElement("div");
+      d.className = "city-bar"+(mine?" mine":"")+(c.completed?" completed":"");
+      const flag = c.completed ? "✅ #"+c.rank : "";
+      d.innerHTML = `<div class="name">${i+1}. ${c.name} ${flag}</div>
+        <div class="bar"><div style="width:${(c.total/max*100)}%"></div></div>
+        <div class="muted" style="min-width:55px;text-align:right;font-size:11px;">${c.total.toLocaleString()}</div>`;
+      el.appendChild(d);
+      if(mine){
+        $("city-total").textContent = c.total.toLocaleString();
+        updateTowerBar(c.total);
+        if(c.completed) markTowerDone();
+      }
+    });
+  }catch(e){}
 }
 async function loadCityPlayers(){
-  try{
-    const players = await api("/api/city_players?init_data=" + encodeURIComponent(INIT_DATA));
-    const el = $("city-players");
-    if(!players.length){ el.innerHTML = '<p class="muted">Пока никого нет.</p>'; return; }
-    el.innerHTML = players.map((p,i)=>`<div class="rank-item"><span>${i+1}. ${p.name}</span><b>${p.click_points.toLocaleString()}</b></div>`).join("");
-  }catch(e){}
+  try{
+    const players = await api("/api/city_players?init_data=" + encodeURIComponent(INIT_DATA));
+    const el = $("city-players");
+    if(!players.length){ el.innerHTML = '<p class="muted">Пока никого нет.</p>'; return; }
+    el.innerHTML = players.map((p,i)=>`<div class="rank-item"><span>${i+1}. ${p.name}</span><b>${p.click_points.toLocaleString()}</b></div>`).join("");
+  }catch(e){}
 }
 async function loadGlobalTop(){
-  try{
-    const players = await api("/api/global_top");
-    const el = $("global-players");
-    el.innerHTML = players.map((p,i)=>`<div class="rank-item"><span>${i+1}. ${p.name} <span class="muted">[${p.city}]</span></span><b>${p.click_points.toLocaleString()} <span class="mult-badge">×${p.multiplier}</span></b></div>`).join("");
-  }catch(e){}
+  try{
+    const players = await api("/api/global_top");
+    const el = $("global-players");
+    el.innerHTML = players.map((p,i)=>`<div class="rank-item"><span>${i+1}. ${p.name} <span class="muted">[${p.city}]</span></span><b>${p.click_points.toLocaleString()} <span class="mult-badge">×${p.multiplier}</span></b></div>`).join("");
+  }catch(e){}
 }
 async function loadAchievements(){
-  try{
-    const ach = await api("/api/my_achievements?init_data=" + encodeURIComponent(INIT_DATA));
-    const el = $("ach-list");
-    el.innerHTML = ach.map(a=>`<div class="rank-item"><span>${a.got?"✅":"⬜"} ${a.title}</span><span class="muted">${a.threshold.toLocaleString()}</span></div>`).join("");
-  }catch(e){}
+  try{
+    const ach = await api("/api/my_achievements?init_data=" + encodeURIComponent(INIT_DATA));
+    const el = $("ach-list");
+    el.innerHTML = ach.map(a=>`<div class="rank-item"><span>${a.got?"✅":"⬜"} ${a.title}</span><span class="muted">${a.threshold.toLocaleString()}</span></div>`).join("");
+  }catch(e){}
 }
 setInterval(loadLeaderboard, 15000);
-
+ 
 function connectWS(){
-  const proto = location.protocol === "https:" ? "wss" : "ws";
-  const ws = new WebSocket(proto+"://"+location.host+"/ws");
-  state.ws = ws;
-  ws.onopen = ()=> ws.send(JSON.stringify({type:"auth",init_data:INIT_DATA}));
-  ws.onmessage = (ev)=>{
-    const m = JSON.parse(ev.data);
-    if(m.type==="question") showQuestion(m);
-    else if(m.type==="question_result") showQuestionResult(m);
-    else if(m.type==="tower_completed"){
-      toast(`🏰 Район «${m.city}» достроил башню! Место #${m.rank}`);
-    }
-    else if(m.type==="season_reset"){
-      toast(`🔄 Новый сезон #${m.season}! Башни обнулены.`);
-      location.reload();
-    }
-  };
-  ws.onclose = ()=> setTimeout(connectWS, 3000);
+  const wsUrl = BASE_URL.replace("https://", "wss://").replace("http://", "ws://") + "/ws";
+  const ws = new WebSocket(wsUrl);
+  state.ws = ws;
+  ws.onopen = ()=> ws.send(JSON.stringify({type:"auth",init_data:INIT_DATA}));
+  ws.onmessage = (ev)=>{
+    const m = JSON.parse(ev.data);
+    if(m.type==="question") showQuestion(m);
+    else if(m.type==="question_result") showQuestionResult(m);
+    else if(m.type==="tower_completed"){
+      toast(`🏰 Район «${m.city}» достроил башню! Место #${m.rank}`);
+    }
+    else if(m.type==="season_reset"){
+      toast(`🔄 Новый сезон #${m.season}! Башни обнулены.`);
+      location.reload();
+    }
+  };
+  ws.onclose = ()=> setTimeout(connectWS, 3000);
 }
 function showQuestion(q){
-  if(state.currentQ) return;
-  state.currentQ = {...q, startedAt:Date.now()};
-  const overlay = document.createElement("div");
-  overlay.className="question"; overlay.id="q-overlay";
-  overlay.innerHTML = '<div class="qcard"><div class="qcat">'+q.category+' · '+q.duration+' сек</div><div class="timer"><div id="q-timer-bar" style="width:100%"></div></div><div class="qtext">'+q.text+'</div><div id="q-opts"></div></div>';
-  document.body.appendChild(overlay);
-  const opts = overlay.querySelector("#q-opts");
-  q.options.forEach((opt,idx)=>{
-    const b = document.createElement("button");
-    b.className="qopt"; b.textContent=opt;
-    b.onclick = ()=> submitAnswer(idx,overlay);
-    opts.appendChild(b);
-  });
-  const start = Date.now();
-  state.qTimer = setInterval(()=>{
-    const el = document.getElementById("q-timer-bar");
-    if(!el) return;
-    const left = Math.max(0, q.duration*1000-(Date.now()-start));
-    el.style.width = (left/(q.duration*1000)*100)+"%";
-    if(left<=0) clearInterval(state.qTimer);
-  },100);
+  if(state.currentQ) return;
+  state.currentQ = {...q, startedAt:Date.now()};
+  const overlay = document.createElement("div");
+  overlay.className="question"; overlay.id="q-overlay";
+  overlay.innerHTML = '<div class="qcard"><div class="qcat">'+q.category+' · '+q.duration+' сек</div><div class="timer"><div id="q-timer-bar" style="width:100%"></div></div><div class="qtext">'+q.text+'</div><div id="q-opts"></div></div>';
+  document.body.appendChild(overlay);
+  const opts = overlay.querySelector("#q-opts");
+  q.options.forEach((opt,idx)=>{
+    const b = document.createElement("button");
+    b.className="qopt"; b.textContent=opt;
+    b.onclick = ()=> submitAnswer(idx,overlay);
+    opts.appendChild(b);
+  });
+  const start = Date.now();
+  state.qTimer = setInterval(()=>{
+    const el = document.getElementById("q-timer-bar");
+    if(!el) return;
+    const left = Math.max(0, q.duration*1000-(Date.now()-start));
+    el.style.width = (left/(q.duration*1000)*100)+"%";
+    if(left<=0) clearInterval(state.qTimer);
+  },100);
 }
 async function submitAnswer(idx, overlay){
-  if(!state.currentQ) return;
-  const time_taken = (Date.now()-state.currentQ.startedAt)/1000;
-  clearInterval(state.qTimer);
-  overlay.querySelectorAll(".qopt").forEach(b=>b.disabled=true);
-  try{
-    const res = await api("/api/answer",{init_data:INIT_DATA,question_id:state.currentQ.id,option:idx,time_taken});
-    if(res.ok){
-      toast(res.correct ? "✅ +"+res.score : "❌ "+res.score);
-      if(res.user_quiz!==undefined){ state.user.quiz_points = res.user_quiz; }
-      if(res.city_total!==undefined){ $("city-total").textContent = res.city_total.toLocaleString(); updateTowerBar(res.city_total); }
-    }
-  }catch(e){}
+  if(!state.currentQ) return;
+  const time_taken = (Date.now()-state.currentQ.startedAt)/1000;
+  clearInterval(state.qTimer);
+  overlay.querySelectorAll(".qopt").forEach(b=>b.disabled=true);
+  try{
+    const res = await api("/api/answer",{init_data:INIT_DATA,question_id:state.currentQ.id,option:idx,time_taken});
+    if(res.ok){
+      toast(res.correct ? "✅ +"+res.score : "❌ "+res.score);
+      if(res.user_quiz!==undefined){ state.user.quiz_points = res.user_quiz; }
+      if(res.city_total!==undefined){ $("city-total").textContent = res.city_total.toLocaleString(); updateTowerBar(res.city_total); }
+    }
+  }catch(e){}
 }
 function showQuestionResult(m){
-  const overlay = document.getElementById("q-overlay");
-  if(overlay){
-    overlay.querySelectorAll(".qopt").forEach((b,i)=>{ if(i===m.correct_index) b.classList.add("correct"); });
-    setTimeout(()=>overlay.remove(),1200);
-  }
-  state.currentQ = null;
-  if(state.qTimer) clearInterval(state.qTimer);
+  const overlay = document.getElementById("q-overlay");
+  if(overlay){
+    overlay.querySelectorAll(".qopt").forEach((b,i)=>{ if(i===m.correct_index) b.classList.add("correct"); });
+    setTimeout(()=>overlay.remove(),1200);
+  }
+  state.currentQ = null;
+  if(state.qTimer) clearInterval(state.qTimer);
 }
 init();
 </script>
